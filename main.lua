@@ -12,9 +12,10 @@ compile("myhappymylife:1.96")
 -- DataInit(0) 文本加载进程序！
 -- DataInit(1)  程序加载进文本！
 
-local IsTest = true  --false表示测试模式，true表示正常模式
-print("start1")
--- DataInit(0)
+local IsTest = false  --false表示测试模式，true表示正常模式
+PrintAndToast("开启测试模式！！")
+UpVideoInDouyin(1)
+PrintAndToast("关闭测试模式！！")
 
 
 -- 背景可用 Shape 填充
@@ -125,9 +126,9 @@ while IsTest do
         elseif(MainWorkMod == "抖音上传视频") then
 
         elseif(MainWorkMod == "快手上传视频") then
-
+            Upallvideo(UpMod)
         elseif(MainWorkMod == "清理垃圾视频") then
-			Upallvideo(UpMod)
+			
         end
 	else
 		print('用户选择了取消')

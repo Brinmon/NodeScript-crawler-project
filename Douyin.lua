@@ -1,57 +1,55 @@
---Kuaishou.lua
-
-function UpVideoInKuaishou(UpVideoNum)
+--Douyin.lua
+function UpVideoInDouyin(UpVideoNum)
     if(UpVideoNum<=0)then   
         PrintAndToast("无视频要上传跳过！")
         return 
     end
     local start_time = os.time()
-    --启动快手！
-    runApp("com.smile.gifmaker")
+    --启动抖音！
+    runApp("com.ss.android.ugc.aweme")
     sleep(5000)
-    --判断是否进入快手页面
+    --判断是否进入抖音页面
     local IsWatchKuaishouTextPos = R():text("首页");
-    local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
-    PrintAndToast("成功进入快手！")
+    local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入抖音","text")
+    PrintAndToast("成功进入抖音！")
 
-    local idx = 1
-
-    while true do 
-        local Iserror,errorinfo = pcall(
-            function()
-                while( idx <= UpVideoNum ) do 
-                    UpVideoInKuaishouPart(idx)
-                    sleep(1000)
-                    SelectVideoTask("MC")
-                    sleep(1000)
-                    local PushVideoPos = R():id("com.smile.gifmaker:id/publish_button"):text("发布");
-                    AutoClick(PushVideoPos,"点击上传视频！")
-                    WaitForKuaishouUpVideoFinishedInKuaishou()
-                    click(360,794)
-                    sleep(500)
-                    click(360,794)
-                    idx = idx + 1
-                end
-            end
-        )
-        if Iserror then
-            print("UpVideoInKuaishou视频上传完成："..UpVideoNum)
-            home()
-            -- 获取程序结束时间戳
-            local end_time = os.time()
-            -- 计算运行时间（以秒为单位）
-            OutPutOperationTime(start_time,end_time)
-            break
-        else
-            print("UpVideoInKuaishou视频上传失败！重新上传！")
-            CloseAllPross()
-            runApp("com.smile.gifmaker")
-            --判断是否进入快手页面
-            local IsWatchKuaishouTextPos = R():text("首页");
-            local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
-            PrintAndToast("成功进入快手！")
-        end
-    end
+    -- local idx = 1
+    -- while true do 
+    --     local Iserror,errorinfo = pcall(
+    --         function()
+    --             while( idx <= UpVideoNum ) do 
+    --                 UpVideoInKuaishouPart(idx)
+    --                 sleep(1000)
+    --                 SelectVideoTask("MC")
+    --                 sleep(1000)
+    --                 local PushVideoPos = R():id("com.smile.gifmaker:id/publish_button"):text("发布");
+    --                 AutoClick(PushVideoPos,"点击上传视频！")
+    --                 WaitForKuaishouUpVideoFinishedInKuaishou()
+    --                 click(360,794)
+    --                 sleep(500)
+    --                 click(360,794)
+    --                 idx = idx + 1
+    --             end
+    --         end
+    --     )
+    --     if Iserror then
+    --         print("UpVideoInKuaishou视频上传完成："..UpVideoNum)
+    --         home()
+    --         -- 获取程序结束时间戳
+    --         local end_time = os.time()
+    --         -- 计算运行时间（以秒为单位）
+    --         OutPutOperationTime(start_time,end_time)
+    --         break
+    --     else
+    --         print("UpVideoInKuaishou视频上传失败！重新上传！")
+    --         CloseAllPross()
+    --         runApp("com.ss.android.ugc.aweme")
+    --         --判断是否进入快手页面
+    --         local IsWatchKuaishouTextPos = R():text("首页");
+    --         local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
+    --         PrintAndToast("成功进入快手！")
+    --     end
+    -- end
 end
 
 function WaitForKuaishouUpVideoFinishedInKuaishou()
@@ -109,17 +107,17 @@ function SelectVideoTask(TaskType)
     end
 end
 
--- save("KuaishouTitle1", "这么精彩的视频确定不点个收藏 #我的世界 #我的世界周年庆 #我的游戏日常 ")
--- save("KuaishouTitle2", "有趣的mc视频可没有多少啊！#我的世界 #我的世界周年庆 #我的游戏日常")
--- save("KuaishouTitle3", "这确定不点个关注！#我的世界 #我的世界周年庆 #我的游戏日常")
--- save("KuaishouTitle4", "我为 #我的世界（联运） 拍摄了精彩游戏视频！跟我一起玩吧  #mc节奏大师  #无缝剪辑")
+-- save("DouyinTitle1","《当我打开抖音发现竟然是MC时》 #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
+-- save("DouyinTitle2","不会吧！不会吧！mc没热度了！#我的世界 #我的世界启动 #我的世界中国版 #肝帝出发")
+-- save("DouyinTitle3","方块扶我青云志，我还MC永不朽！ #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
+-- save("DouyinTitle4","我的游戏貌似只有MC！#我的世界 #我的世界启动 #我的世界网易 #我的游戏日常")
 function UpVideoInKuaishouPart(idx)
     local titleset = {}
     -- print("1")
-    titleset[0] = get("KuaishouTitle1","#我的世界");
-    titleset[1] = get("KuaishouTitle2","#我的世界");
-    titleset[2] = get("KuaishouTitle3","#我的世界");
-    titleset[3] = get("KuaishouTitle4","#我的世界");
+    titleset[0] = get("DouyinTitle1","#我的世界");
+    titleset[1] = get("DouyinTitle2","#我的世界");
+    titleset[2] = get("DouyinTitle3","#我的世界");
+    titleset[3] = get("DouyinTitle4","#我的世界");
     
     local KuaishouUpVideoTitle = titleset[math.random(0, 3)]
 
