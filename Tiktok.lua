@@ -139,8 +139,9 @@ function DownloadVedioInTiktok()
         }
         WriteFileData(info)
         if(WaitVideoDownloadFinish()) then
+            sleep(500)
             local pos_savefinish = find(R():text("Video saved"):screen(1));
-            if pos_finish or pos_photofinish or pos_savefinish then
+            if pos_savefinish then
                 back()
             end
             sleep(500)

@@ -22,7 +22,7 @@ function UpVideoInKuaishou(UpVideoNum)
                 while( idx <= UpVideoNum ) do 
                     UpVideoInKuaishouPart(idx)
                     sleep(1000)
-                    SelectVideoTask("MC")
+                    SelectKuaishouVideoTask("MC")
                     sleep(1000)
                     local PushVideoPos = R():id("com.smile.gifmaker:id/publish_button"):text("发布");
                     AutoClick(PushVideoPos,"点击上传视频！")
@@ -72,7 +72,7 @@ function WaitForKuaishouUpVideoFinishedInKuaishou()
     print("无需等待，直接跳过！")
 end
 
-function SelectVideoTask(TaskType)
+function SelectKuaishouVideoTask(TaskType)
     if(TaskType == "MC") then
         local create_service = R():id("com.smile.gifmaker:id/share_producer_wrap");
         AutoClick(create_service,"选择创作者服务",false,true)
@@ -86,7 +86,7 @@ function SelectVideoTask(TaskType)
             AutoClick(game_task,"选择游戏合伙人按钮",false,false,true)
             sleep(3000)
             local mc_task = {525,348,669,407,"541,358,#FE82A0|651,359,#FE3666|592,375,#FFFFFF|540,393,#FE3666|648,392,#FFFFFF",95}
-            local value = AutoColorClick(mc_task,"选择我的世界任务按钮",true)
+            local value = AutoColorClick(mc_task,"选择我的世界任务按钮",true,6)
             if(value =="跳过") then 
                 back()
                 sleep(500)

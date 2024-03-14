@@ -59,7 +59,7 @@ function AutoClick(rule,str,longflag,posflag,iswait)
                         targetview:click()
                         PrintAndToast(str.." 节点：点击成功！")
                         sleep(500)
-                        return;
+                        return 1;
                     end
                 end
             else
@@ -70,17 +70,17 @@ function AutoClick(rule,str,longflag,posflag,iswait)
                 click((targetview.rect.left + targetview.rect.right)/2 , (targetview.rect.top + targetview.rect.bottom)/2)
                 PrintAndToast(str.." 节点：坐标点击成功！")
                 sleep(500)
-                return;
+                return 1;
             elseif(islongclick == 1) then
                 PrintAndToast(str.." 节点：可点击！")
                 click((targetview.rect.left + targetview.rect.right)/2 , (targetview.rect.top + targetview.rect.bottom)/2,800)
                 PrintAndToast(str.." 节点：长按成功！")
                 sleep(500)
-                return;
+                return 1;
             end
         end
     
-        if(iswait and time == 3) then 
+        if(iswait and time == 4) then 
             PrintAndToast("无需等待直接跳过！")
             return "跳过"
         end
@@ -101,7 +101,11 @@ end
 function AutoColorClick(rule,str,iswait,num)
     local PosIsExist
     local targetview
+    local tempnum = 0
     local time = 1
+    if(iswait)then
+        tempnum = num
+    end
     while(true)
     do
         PosIsExist,targetview = CheckColorPosIsExist(rule)
@@ -112,7 +116,7 @@ function AutoColorClick(rule,str,iswait,num)
             return;
         end
 
-        if(iswait and time == 4) then 
+        if(iswait and time == tempnum) then 
             PrintAndToast("无需等待直接跳过！")
             return "跳过"
         end
