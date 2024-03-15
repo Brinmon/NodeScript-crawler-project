@@ -80,7 +80,7 @@ function AutoClick(rule,str,longflag,posflag,iswait)
             end
         end
     
-        if(iswait and time == 4) then 
+        if(iswait and time == 3) then 
             PrintAndToast("无需等待直接跳过！")
             return "跳过"
         end

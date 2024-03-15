@@ -19,7 +19,7 @@ function Crawlallvideo(CrawlMod)
 	OutPutOperationTime(start_time,end_time)
 end
 
-function Upallvideo(UpMod)
+function Upallvideo(UpMod,videotype)
     local start_time = os.time()
 	local appname = {"0","0"}
 	if(UpMod == 0) then  --快手
@@ -45,9 +45,10 @@ function Upallvideo(UpMod)
 					if(NewVideoNum<=15) then 
 						PrintAndToast("视频数量小于15！")
 						if(appname[0] == "快手") then 
-							UpVideoInKuaishou(NewVideoNum)
-						elseif(appname[1] == "抖音") then 
-							UpVideoInDouyin(NewVideoNum)
+							UpVideoInKuaishou(NewVideoNum,videotype)
+						end
+						if(appname[1] == "抖音") then 
+							UpVideoInDouyin(NewVideoNum,videotype)
 						end
 						PrintAndToast("开始删除视频！")
 						DeleteSomeVideo(NewVideoNum)
@@ -55,9 +56,10 @@ function Upallvideo(UpMod)
 					else
 						PrintAndToast("视频数量大于15！")
 						if(appname[0] == "快手") then 
-							UpVideoInKuaishou(15)
-						elseif(appname[1] == "抖音") then 
-							UpVideoInDouyin(15)
+							UpVideoInKuaishou(15,videotype)
+						end
+						if(appname[1] == "抖音") then 
+							UpVideoInDouyin(15,videotype)
 						end
 						PrintAndToast("开始删除视频！")
 						DeleteSomeVideo(15)
@@ -77,3 +79,6 @@ function Upallvideo(UpMod)
 	end
 end
 
+function ErrorFix()
+	PrintAndToast("欢迎来到Errorfix函数")
+end

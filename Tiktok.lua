@@ -145,6 +145,7 @@ function DownloadVedioInTiktok()
                 back()
             end
             sleep(500)
+            back()
         end
     else
         PrintAndToast("该作品是图片格式！")
@@ -332,6 +333,7 @@ function GetTiktokAllCreaterNewVideo(filename)
             return
         else
             PrintAndToast("Tiktok爬取视频错误")
+            ErrorFix()
             CloseAllPross()
             local Ishasnet = CheckNetIsConnect("Tiktok")
             if(Ishasnet == false)then 

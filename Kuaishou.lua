@@ -1,11 +1,30 @@
 --Kuaishou.lua
 
-function UpVideoInKuaishou(UpVideoNum)
+-- save("KuaishouTitle1", "这么精彩的视频确定不点个收藏 #我的世界 #我的世界周年庆 #我的游戏日常 ")
+-- save("KuaishouTitle2", "有趣的mc视频可没有多少啊！#我的世界 #我的世界周年庆 #我的游戏日常")
+-- save("KuaishouTitle3", "这确定不点个关注！#我的世界 #我的世界周年庆 #我的游戏日常")
+-- save("KuaishouTitle4", "我为 #我的世界（联运） 拍摄了精彩游戏视频！跟我一起玩吧  #mc节奏大师  #无缝剪辑")
+
+function UpVideoInKuaishou(UpVideoNum,videotype)
     if(UpVideoNum<=0)then   
         PrintAndToast("无视频要上传跳过！")
         return 
     end
     local start_time = os.time()
+    local titleset = {}
+    if(videotype == "MC")then
+        PrintAndToast("MC")
+        titleset[0] = get("KuaishouTitle1","#我的世界");
+        titleset[1] = get("KuaishouTitle2","#我的世界");
+        titleset[2] = get("KuaishouTitle3","#我的世界");
+        titleset[3] = get("KuaishouTitle4","#我的世界");
+    elseif videotype == "Other" then
+        titleset[0] = get("DouyinTitle1Other","#游戏的正确打开方式");
+        titleset[1] = get("DouyinTitle2Other","#游戏的正确打开方式");
+        titleset[2] = get("DouyinTitle3Other","#游戏的正确打开方式");
+        titleset[3] = get("DouyinTitle4Other","#游戏的正确打开方式");  
+    end
+
     --启动快手！
     runApp("com.smile.gifmaker")
     sleep(5000)
@@ -14,15 +33,22 @@ function UpVideoInKuaishou(UpVideoNum)
     local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
     PrintAndToast("成功进入快手！")
 
+    
     local idx = 1
 
     while true do 
         local Iserror,errorinfo = pcall(
             function()
                 while( idx <= UpVideoNum ) do 
+                    local KuaishouUpVideoTitle = titleset[math.random(0, 3)]
+                    print(KuaishouUpVideoTitle)
                     UpVideoInKuaishouPart(idx)
+                    local title_input = R():id("com.smile.gifmaker:id/editor");
+                    AutoClick(title_input,"点击一下输入框",false,true)
+                    sleep(500)
+                    AutoInput(title_input,KuaishouUpVideoTitle)
                     sleep(1000)
-                    SelectKuaishouVideoTask("MC")
+                    SelectKuaishouVideoTask(videotype)
                     sleep(1000)
                     local PushVideoPos = R():id("com.smile.gifmaker:id/publish_button"):text("发布");
                     AutoClick(PushVideoPos,"点击上传视频！")
@@ -44,6 +70,7 @@ function UpVideoInKuaishou(UpVideoNum)
             break
         else
             print("UpVideoInKuaishou视频上传失败！重新上传！")
+            ErrorFix()
             CloseAllPross()
             runApp("com.smile.gifmaker")
             --判断是否进入快手页面
@@ -59,9 +86,13 @@ function WaitForKuaishouUpVideoFinishedInKuaishou()
     local whiletime = 1
     while whiletime<=10 do 
         print("检测次数："..whiletime)
-        if (CheckFunctionIsSucceed(KuaishouIsVoideFinished,"检测是否发布完成",true,6)) then
+        local Xbutton = R():text("取消");
+        AutoClick(Xbutton,"点击取消！",false,true,true)
+        if (CheckFunctionIsSucceed(KuaishouIsVoideFinished,"检测是否发布完成",true,3)) then
             --AutoClick(KuaishouIsVoideFinished,"进入新发布的视频！")
             print("视频发布成功！")
+            local Xbutton = R():text("取消");
+            AutoClick(Xbutton,"点击取消！",false,true,true)
             return
         else
             print("WaitForKuaishouUpVideoFinished，继续等待！")
@@ -75,6 +106,7 @@ end
 function SelectKuaishouVideoTask(TaskType)
     if(TaskType == "MC") then
         local create_service = R():id("com.smile.gifmaker:id/share_producer_wrap");
+        AutoClick(create_service,"选择创作者服务",false,true)
         AutoClick(create_service,"选择创作者服务",false,true)
 
         local sidetask = R():id("com.smile.gifmaker.tuna_plc_post:id/share_business_link_list_view");
@@ -106,23 +138,15 @@ function SelectKuaishouVideoTask(TaskType)
         else
             PrintAndToast("不存在！账号提示")
         end
+    elseif TaskType == "Other" then
+        PrintAndToast("跳过任务选择")
+        back()
+        sleep(500)
     end
 end
 
--- save("KuaishouTitle1", "这么精彩的视频确定不点个收藏 #我的世界 #我的世界周年庆 #我的游戏日常 ")
--- save("KuaishouTitle2", "有趣的mc视频可没有多少啊！#我的世界 #我的世界周年庆 #我的游戏日常")
--- save("KuaishouTitle3", "这确定不点个关注！#我的世界 #我的世界周年庆 #我的游戏日常")
--- save("KuaishouTitle4", "我为 #我的世界（联运） 拍摄了精彩游戏视频！跟我一起玩吧  #mc节奏大师  #无缝剪辑")
-function UpVideoInKuaishouPart(idx)
-    local titleset = {}
-    -- print("1")
-    titleset[0] = get("KuaishouTitle1","#我的世界");
-    titleset[1] = get("KuaishouTitle2","#我的世界");
-    titleset[2] = get("KuaishouTitle3","#我的世界");
-    titleset[3] = get("KuaishouTitle4","#我的世界");
-    
-    local KuaishouUpVideoTitle = titleset[math.random(0, 3)]
 
+function UpVideoInKuaishouPart(idx)
     --点击发布视频按钮
     local UpVideoButtonPos = R():id("com.smile.gifmaker:id/shoot_container"):screen(1);
     AutoClick(UpVideoButtonPos,"点击发布按钮",false,true)
@@ -139,9 +163,5 @@ function UpVideoInKuaishouPart(idx)
     local video_next1 = R():id("com.smile.gifmaker:id/next_step_button");
     AutoClick(video_next1,"选择视频后下一步按钮再下一步",false,true)
     sleep(500)
-    local title_input = R():id("com.smile.gifmaker:id/editor");
-    AutoClick(title_input,"点击一下输入框",false,true)
-    AutoInput(title_input,KuaishouUpVideoTitle)
-    back()
 end
 

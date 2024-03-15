@@ -506,6 +506,7 @@ function GetYouTubeAllCreaterNewVideo(filename)
             return
         else
             PrintAndToast("YouTube爬取视频错误")
+            ErrorFix()
             CloseAllPross()
             local Ishasnet = CheckNetIsConnect("YouTube")
             if(Ishasnet == false)then 

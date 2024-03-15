@@ -15,14 +15,9 @@ compile("myhappymylife:1.96")
 
 local IsTest = true  --false表示测试模式，true表示正常模式
 PrintAndToast("开启测试模式！！")
--- UpVideoInDouyinPart(3)
--- -- sleep(500)
--- SelectDouyinVideoTask("MC")
 
--- local PushVideoPos = R():text("发布"):getParent();
--- AutoClick(PushVideoPos,"点击上传视频！",false,true)
 PrintAndToast("关闭测试模式！！")
-
+ErrorFix()
 
 -- 背景可用 Shape 填充
 shape={
@@ -93,7 +88,7 @@ while IsTest do
 				{type="div",ore=1,
 					views={
 						{type="text",value="作者类型：",style=css.text2},
-						{type="radio",value="*Mc|Other",ore=1,id="AuthorType"},
+						{type="radio",value="*MC|Other",ore=1,id="AuthorType"},
 					};
 				};
 
@@ -128,11 +123,11 @@ while IsTest do
         elseif(MainWorkMod == "快手检查视频") then
 
         elseif(MainWorkMod == "上传视频") then 
-
+			Upallvideo(2,AuthorType)
         elseif(MainWorkMod == "抖音上传视频") then
-            Upallvideo(1)
+            Upallvideo(1,AuthorType)
         elseif(MainWorkMod == "快手上传视频") then
-            Upallvideo(0)
+            Upallvideo(0,AuthorType)
         elseif(MainWorkMod == "清理垃圾视频") then
 			
         end

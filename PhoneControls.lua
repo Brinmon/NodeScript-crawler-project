@@ -277,6 +277,7 @@ function DeleteSomeVideo(somevideonum)
             break
         else
             print("视频清除错误！重新清除！")
+            ErrorFix()
             CloseAllPross()
         end
     end

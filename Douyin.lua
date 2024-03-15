@@ -1,10 +1,34 @@
 --Douyin.lua
-function UpVideoInDouyin(UpVideoNum)
+
+-- save("DouyinTitle1","《当我打开抖音发现竟然是MC时》 #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
+-- save("DouyinTitle2","不会吧！不会吧！mc没热度了！#我的世界 #我的世界启动 #我的世界中国版 #肝帝出发")
+-- save("DouyinTitle3","方块扶我青云志，我还MC永不朽！ #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
+-- save("DouyinTitle4","我的游戏貌似只有MC！#我的世界 #我的世界启动 #我的世界网易 #我的游戏日常")
+
+-- save("DouyinTitle1Other","《当我打开抖音发现竟然是游戏时》 #游戏启动 #游戏的重要性 #好久没玩游戏了")
+-- save("DouyinTitle2Other","不会吧！不会吧！游戏不会被忘了吧！#游戏启动 #游戏的重要性 #好久没玩游戏了")
+-- save("DouyinTitle3Other","游戏扶我青云志，我还游戏永不朽！ #游戏启动 #游戏的重要性 #好久没玩游戏了")
+-- save("DouyinTitle4Other","我的游戏貌似还有很多！ #游戏启动 #游戏的重要性 #好久没玩游戏了")
+
+function UpVideoInDouyin(UpVideoNum,videotype)
     if(UpVideoNum<=0)then   
         PrintAndToast("无视频要上传跳过！")
         return 
     end
     local start_time = os.time()
+    local titleset = {}
+    if videotype == "MC" then
+        titleset[0] = get("DouyinTitle1","#我的世界");
+        titleset[1] = get("DouyinTitle2","#我的世界");
+        titleset[2] = get("DouyinTitle3","#我的世界");
+        titleset[3] = get("DouyinTitle4","#我的世界");  
+    elseif videotype == "Other" then
+        titleset[0] = get("DouyinTitle1Other","#游戏的正确打开方式");
+        titleset[1] = get("DouyinTitle2Other","#游戏的正确打开方式");
+        titleset[2] = get("DouyinTitle3Other","#游戏的正确打开方式");
+        titleset[3] = get("DouyinTitle4Other","#游戏的正确打开方式");  
+    end
+
     --启动抖音！
     runApp("com.ss.android.ugc.aweme")
     sleep(3000)
@@ -18,16 +42,23 @@ function UpVideoInDouyin(UpVideoNum)
         local Iserror,errorinfo = pcall(
             function()
                 while( idx <= UpVideoNum ) do 
+                    local DouyinUpVideoTitle = titleset[math.random(0, 3)]
                     UpVideoInDouyinPart(idx)
+                    local title_input = R():type("EditText");
+                    AutoClick(title_input,"点击一下输入框",false,true)
                     sleep(500)
-                    SelectDouyinVideoTask("MC")
+                    AutoInput(title_input,DouyinUpVideoTitle)
+                    sleep(500)
+                    -- back()
+                    -- sleep(500)
+                    SelectDouyinVideoTask(videotype)
                     sleep(500)
                     local PushVideoPos = R():text("发布");
                     AutoClick(PushVideoPos,"点击上传视频！",false,true)
                     WaitForDouyinUpVideoFinishedInDouyin()
-                    -- click(360,794)
-                    -- sleep(500)
-                    -- click(360,794)
+                    click(360,794)
+                    sleep(500)
+                    click(360,794)
                     idx = idx + 1
                 end
             end
@@ -42,6 +73,7 @@ function UpVideoInDouyin(UpVideoNum)
             break
         else
             print("UpVideoInDouyin视频上传失败！重新上传！")
+            ErrorFix() 
             CloseAllPross()
             runApp("com.ss.android.ugc.aweme")
             --判断是否进入抖音页面
@@ -54,11 +86,18 @@ end
 
 function WaitForDouyinUpVideoFinishedInDouyin()
     local DouyinIsVoideFinished = R():text(".*成功.*"):screen(1);
+    local DouyinIsVoideFinished1 = R():desc(".*发布中.*"):screen(1);
     local whiletime = 1
     while whiletime<=10 do 
         print("检测次数："..whiletime)
-        if (CheckFunctionIsSucceed(DouyinIsVoideFinished,"检测是否发布完成",true,6)) then
+        local Xbutton = R():desc("取消");
+        AutoClick(Xbutton,"点击取消！",false,true,true)
+        local flag = CheckFunctionIsSucceed(DouyinIsVoideFinished,"检测是否发布完成",true,3)
+        local flag1 = CheckFunctionIsSucceed(DouyinIsVoideFinished1,"检测是否发布完成",true,3)
+        if (flag == true or flag1 == false ) then
             --AutoClick(DouyinIsVoideFinished,"进入新发布的视频！")
+            local Xbutton = R():desc("取消");
+            AutoClick(Xbutton,"点击取消！",false,true,true)
             print("视频发布成功！")
             return
         else
@@ -74,6 +113,9 @@ function SelectDouyinVideoTask(TaskType)
     if(TaskType == "MC") then
         local create_service = R():text("添加游戏");
         local IsHasTask = AutoClick(create_service,"添加游戏",false,true,true)
+        sleep(100)
+        IsHasTask = AutoClick(create_service,"添加游戏",false,true,true)
+        sleep(500)
         if(IsHasTask == "跳过")then 
             return
         end
@@ -85,23 +127,15 @@ function SelectDouyinVideoTask(TaskType)
             sleep(500)
         end
         sleep(1000)
+    elseif TaskType == "Other" then
+        PrintAndToast("跳过任务选择")
+        back()
+        sleep(500)
     end
 end
 
--- save("DouyinTitle1","《当我打开抖音发现竟然是MC时》 #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
--- save("DouyinTitle2","不会吧！不会吧！mc没热度了！#我的世界 #我的世界启动 #我的世界中国版 #肝帝出发")
--- save("DouyinTitle3","方块扶我青云志，我还MC永不朽！ #我的世界 #我的世界启动 #我的世界中国版 #我的游戏日常")
--- save("DouyinTitle4","我的游戏貌似只有MC！#我的世界 #我的世界启动 #我的世界网易 #我的游戏日常")
-function UpVideoInDouyinPart(idx)
-    local titleset = {}
-    -- print("1")
-    titleset[0] = get("DouyinTitle1","#我的世界");
-    titleset[1] = get("DouyinTitle2","#我的世界");
-    titleset[2] = get("DouyinTitle3","#我的世界");
-    titleset[3] = get("DouyinTitle4","#我的世界");
-    
-    local DouyinUpVideoTitle = titleset[math.random(0, 3)]
 
+function UpVideoInDouyinPart(idx)
     --点击发布视频按钮
     local UpVideoButtonPos = R():desc("拍摄，按钮"):screen(1);
     AutoClick(UpVideoButtonPos,"点击发布按钮",false,true)
@@ -143,13 +177,8 @@ function UpVideoInDouyinPart(idx)
 
     local video_next1 = R():text("下一步");
     AutoClick(video_next1,"选择视频后下一步按钮再下一步",false,true)
+    -- AutoClick(video_next1,"选择视频后下一步按钮再下一步",false,true)
     sleep(500)
-    local title_input = R():type("EditText");
-    AutoClick(title_input,"点击一下输入框",false,true)
-    sleep(500)
-    AutoInput(title_input,DouyinUpVideoTitle)
-    sleep(500)
-    back()
-    sleep(1000)
+
 end
 
