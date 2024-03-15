@@ -145,7 +145,7 @@ function ReadTextToTable(AuthorTable,IsAuthorTable,filename)
     TiktokAuthorfile = io.open(getDir().."/"..filename, "r+")
     if TiktokAuthorfile then
         for line in TiktokAuthorfile:lines() do
-            tempAuthorTable[idx_2] = line
+            tempAuthorTable[idx_2] = string.gsub(line, "[\r\n]", "")
             tempIsAuthorTable[idx_2] = true
             if(idx_2 == tablelen-1) then 
                 AuthorTable[idx_1] = tempAuthorTable

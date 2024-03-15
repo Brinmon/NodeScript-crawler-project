@@ -214,19 +214,17 @@ function GetOneTiktokCreaterNewVideo(TiktokAuthorName)
         local AuthorId = TiktokAuthorName.."_TiktokWatchNum"
         print(AuthorId)
         local context = get(AuthorId,"没有获取到值");
+        save(AuthorId,tostring(VideoWatchedNum))
         if(context == "没有获取到值")then 
             PrintAndToast("继续下面的步骤！")
-            save(AuthorId,tostring(VideoWatchedNum))
         elseif(tonumber(context) <= VideoWatchedNum )then
             PrintAndToast("存储的播放量："..context)
             PrintAndToast("播放量增加或者未变！")
             PrintAndToast(TiktokAuthorName.."--->未更新！")
-            save(AuthorId,tostring(VideoWatchedNum))
             return 0
         elseif(tonumber(context) > VideoWatchedNum ) then
             PrintAndToast("存储的播放量："..context)
             PrintAndToast("播放量减少可能更新视频！")
-            save(AuthorId,tostring(VideoWatchedNum))
         end
 
         sleep(1000)
@@ -261,6 +259,55 @@ function GetOneTiktokCreaterNewVideo(TiktokAuthorName)
     end
 end
 
+function GetTiktokTableCreaterNewVideo(filename,AuthorTable,IsAuthorTable)
+    -- 获取程序开始时间戳
+    local start_time = os.time()
+    local idx1len = #AuthorTable
+    print(idx1len)
+    local i = 0
+    -- print(AuthorTable)
+    while true do 
+        local Iserror,errorinfo = pcall(
+            function()
+                print("a")
+                while i<=idx1len do 
+                    if(AuthorTable[i] == "end")then 
+                        PrintAndToast("全部爬取一遍！")
+                        break
+                    end
+                    if(IsAuthorTable[i] == false)then 
+                        i = i+1
+                        goto continue
+                    end
+                    PrintAndToast("当前要爬取的目标："..AuthorTable[i])
+                    local value = GetOneTiktokCreaterNewVideo(AuthorTable[i])
+                    if(value == 1)then 
+                        IsAuthorTable[i] = false
+                    end
+                    print("f")
+                    i = i+1
+                    ::continue::
+                end
+            end
+        )
+        if Iserror then
+            -- 获取程序结束时间戳
+            local end_time = os.time()
+            -- 计算运行时间（以秒为单位）
+            OutPutOperationTime(start_time,end_time)
+            CloseAllPross()
+            return
+        else
+            PrintAndToast("Tiktok爬取视频错误")
+            ErrorFix()
+            CloseAllPross()
+            local Ishasnet = CheckNetIsConnect("Tiktok")
+            if(Ishasnet == false)then 
+                InitChooseBestNet() 
+            end
+        end
+    end
+end
 
 
 
@@ -320,15 +367,7 @@ function GetTiktokAllCreaterNewVideo(filename)
             -- 获取程序结束时间戳
             local end_time = os.time()
             -- 计算运行时间（以秒为单位）
-            local run_time = end_time - start_time
-    
-            -- 将秒数转换为小时、分钟、秒
-            local hours = math.floor(run_time / 3600)
-            local minutes = math.floor((run_time % 3600) / 60)
-            local seconds = run_time % 60
-    
-            -- 输出运行时间
-            PrintAndToast("程序运行时间：" .. hours .. "小时 " .. minutes .. "分钟 " .. seconds .. "秒")
+            OutPutOperationTime(start_time,end_time)
             home()
             return
         else

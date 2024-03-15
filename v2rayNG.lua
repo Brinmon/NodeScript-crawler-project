@@ -67,8 +67,7 @@ end
 
 function ConnectVpn()
     --找到桌面上的vpn
-    home();--返回桌面
-    OpenPhoneapp("v2rayNG")
+    runApp("com.v2ray.ang")
 
     while(true) do
         if(CheckConnetStatus()) then 
@@ -85,10 +84,7 @@ function ConnectVpn()
 end
 
 function CloseConnectVpn()
-    --找到桌面上的vpn
-    home();--返回桌面
-    OpenPhoneapp("v2rayNG")
-
+    runApp("com.v2ray.ang")
     while(true) do
         if(CheckConnetStatus()) then 
             local vpnbutton = R():id("com.v2ray.ang:id/fab");

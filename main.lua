@@ -15,9 +15,17 @@ compile("myhappymylife:1.96")
 
 local IsTest = true  --false表示测试模式，true表示正常模式
 PrintAndToast("开启测试模式！！")
+-- local TiktokFileName = "TiktokAuthor.txt"
+-- local TiktokAuthorTable = {}
+-- local TiktokIsAuthorTable = {}
+-- TiktokAuthorTable,TiktokIsAuthorTable = ReadTextToTable(TiktokAuthorTable,TiktokIsAuthorTable,TiktokFileName)
+-- for i = 0, #TiktokAuthorTable do
+-- 	print("序号"..tostring(i))
+-- 	print(TiktokAuthorTable[i])	
+-- end
 
 PrintAndToast("关闭测试模式！！")
-ErrorFix()
+
 
 -- 背景可用 Shape 填充
 shape={
@@ -111,7 +119,7 @@ while IsTest do
         if(MainWorkMod ==     "抖快全自动") then 
 
         elseif(MainWorkMod == "快手全自动") then 
-
+			CrawlAndUpallvideo(1)
         elseif(MainWorkMod == "抖音全自动") then 
 
         elseif(MainWorkMod == "爬取视频") then

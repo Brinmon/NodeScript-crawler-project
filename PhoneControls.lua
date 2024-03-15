@@ -64,7 +64,7 @@ function CheckNetIsConnect(app_name)
     local p = {
     param={};
     header={};
-    timeout = 5;
+    timeout = 3;
     }
     PrintAndToast("开始测试网路是否成功！")
     --1.【必填】请求的url 地址
