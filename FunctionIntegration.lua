@@ -21,9 +21,17 @@ end
 
 
 function CrawlAndUpallvideo(CrawlAndUPMod)
-    local start_time = os.time()
+    local start_time1 = os.time()
 	local videotype = "MC"
 	local UpMod = 0
+	if CrawlAndUPMod == 0 then
+		UpMod = 0
+	elseif CrawlAndUPMod == 1 then
+		UpMod = 1
+	elseif CrawlAndUPMod == 2 then
+		UpMod = 2
+	end
+	
 
 	local TiktokFileName = "TiktokAuthor.txt"
     local TiktokAuthorTable = {}
@@ -36,6 +44,13 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 	local YouTubeVideoType = "Shorts"
     YouTubeAuthorTable,YouTubeIsAuthorTable = ReadTextToTable(YouTubeAuthorTable,YouTubeIsAuthorTable,YouTubeFileName)
 
+	local TiktokOtherFileName = "TiktokOtherAuthor.txt"
+    local TiktokOtherAuthorTable = {}
+    local TiktokOtherIsAuthorTable = {}
+	local TiktokOtherVideoType = "Other"
+    TiktokOtherAuthorTable,TiktokOtherIsAuthorTable = ReadTextToTable(TiktokOtherAuthorTable,TiktokOtherIsAuthorTable,TiktokOtherFileName)
+
+	local checkidx = 0
 	InitPhoneENV() --选择最好的vpn
 
 	while true do 
@@ -46,23 +61,51 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 						print("序号:"..tostring(i))
 						GetTiktokTableCreaterNewVideo(TiktokFileName,TiktokAuthorTable[i],TiktokIsAuthorTable[i])
 						sleep(1000)
-						Upallvideo(UpMod,videotype)
-						ConnectVpn()
+						local v1 = Upallvideo(UpMod,videotype)
+						if(v1 == 0)then
+							ConnectVpn()
+						end
+						
 					end
 
 					for i = 0, #YouTubeAuthorTable do
 						GetYouTubeTableCreaterNewVideo(YouTubeFileName,YouTubeAuthorTable[i],YouTubeIsAuthorTable[i],YouTubeVideoType)
 						sleep(1000)
-						Upallvideo(UpMod,videotype)
-						ConnectVpn()
+						local v1 = Upallvideo(UpMod,videotype)
+						if(v1 == 0)then
+							ConnectVpn()
+						end
 					end
+
+					-- for i = 0, #TiktokOtherAuthorTable do
+					-- 	GetTiktokTableCreaterNewVideo(YouTubeFileName,TiktokOtherAuthorTable[i],TiktokOtherIsAuthorTable[i])
+					-- 	sleep(1000)
+					-- 	local v1 = Upallvideo(UpMod,"Other")
+					-- 	if(v1 == 0)then
+					-- 		ConnectVpn()
+					-- 	end
+					-- end
+
+					if checkidx == 5 then
+						if CrawlAndUPMod == 0 then
+							KuaishouCheckVideo()
+						elseif CrawlAndUPMod == 1 then
+							DouyinCheckVideo()
+						elseif CrawlAndUPMod == 2 then
+							KuaishouCheckVideo()
+							DouyinCheckVideo()
+						end
+						ConnectVpn()
+						checkidx = 0
+					end
+					checkidx = checkidx + 1
 				end
 			end
 		)
 		if Iserror then
 			local end_time = os.time()
 			PrintAndToast("CrawlAndUpallvideo")
-			OutPutOperationTime(start_time,end_time)
+			OutPutOperationTime(start_time1,end_time)
 			break
 		else
 			PrintAndToast("CrawlAndUpallvideo失败！！"..errorinfo)
@@ -71,7 +114,7 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 end
 
 function Upallvideo(UpMod,videotype)
-    local start_time = os.time()
+    local start_time1 = os.time()
 	local appname = {"0","0"}
 	if(UpMod == 0) then  --快手
 		appname[0] = "快手"
@@ -87,10 +130,10 @@ function Upallvideo(UpMod,videotype)
 	local tiktokvideonum = CountPhoneVideoNum("sdcard/DCIM/Camera/") --tiktokpath
 	NewVideoNum = youtubevideonum + tiktokvideonum
 	PrintAndToast("视频数量："..tostring(NewVideoNum))
-	if(NewVideoNum > 0)then
-		CloseConnectVpn()
+	if(NewVideoNum <= 0)then
+		return 1
 	end
-
+	CloseConnectVpn()
 	while true do 
 		local Iserror,errorinfo = pcall(
 			function()
@@ -125,8 +168,8 @@ function Upallvideo(UpMod,videotype)
 		if Iserror then
 			local end_time = os.time()
 			PrintAndToast("Upallvideo上传视频运行完毕！！！")
-			OutPutOperationTime(start_time,end_time)
-			break
+			OutPutOperationTime(start_time1,end_time)
+			return 0
 		else
 			PrintAndToast("Upallvideo上传视频失败！！"..errorinfo)
 		end

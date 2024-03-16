@@ -1,7 +1,7 @@
 --YouTube.lua
 
 --爬取YouTube的id
-function GetYouTubeAuthorId()
+function GetYouTubeAuthorId(AuthorName)
     PrintAndToast("爬取YouTube的id")
     -- local AuthorNamepos = R():text(".*@.*"):screen(1);
     -- local AuthorName = GetPosStatsInfo(AuthorNamepos, "获取YouTube作者主页名", "text", false)
@@ -13,20 +13,20 @@ function GetYouTubeAuthorId()
     -- AutoClick(copylinkpos,"点击复制链接",false,true)
     -- sleep(500)
     -- local msg = getClipboard(); --获取剪贴板中的内容
-    local r = {match='@.*';sim=0.7;line=false; }
-    local res = ocrp(r);
-    local tempAuthorName = ""
-    print(res)
-    if #res ~= 0 then 
-        PrintAndToast("获取作者名成功！！")
-        print(res[1]["text"]:match("(%S+)"))
-        tempAuthorName = res[1]["text"]:match("(%S+)")
-    else
-        PrintAndToast("获取作者名失败！！")
-        return 0
-    end
+    -- local r = {match='@.*';sim=0.7;line=false; }
+    -- local res = ocrp(r);
+    -- local tempAuthorName = ""
+    -- print(res)
+    -- if #res ~= 0 then 
+    --     PrintAndToast("获取作者名成功！！")
+    --     print(res[1]["text"]:match("(%S+)"))
+    --     tempAuthorName = res[1]["text"]:match("(%S+)")
+    -- else
+    --     PrintAndToast("获取作者名失败！！")
+    --     return 0
+    -- end
 
-    local AuthorName = tempAuthorName
+    -- local AuthorName = tempAuthorName
     PrintAndToast("作者名："..AuthorName)
     local p = {
         param={};
@@ -35,12 +35,12 @@ function GetYouTubeAuthorId()
     -- 请求地址
     p.url ="https://www.youtube.com/"..AuthorName;
     local AuthorId = AuthorName:sub(2) .. "_channelID"
-    local id = get(AuthorId,"没有获取到值");
-    print(id)
-    if(id ~= "没有获取到值") then 
-        PrintAndToast("该id已经被存储无需再存储！")
-        return
-    end
+    -- local id = get(AuthorId,"没有获取到值");
+    -- print(id)
+    -- if(id ~= "没有获取到值") then 
+    --     PrintAndToast("该id已经被存储无需再存储！")
+    --     return
+    -- end
     res = httpGet(p);
     if res then
          --打印服务器的返回值

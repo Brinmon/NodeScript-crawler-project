@@ -1,11 +1,11 @@
 --Tiktok.lua
 
 --爬取Tiktok的id
-function GetTiktokAuthorId()
+function GetTiktokAuthorId(AuthorName)
     --https://www.highsocial.com/zh/find-tiktok-user-id/
-    local AuthorNamepos = R():text(".*@.*"):screen(1);
-    local AuthorName = GetPosStatsInfo(AuthorNamepos, "获取Tiktok作者主页名", "text", false)
-    PrintAndToast("作者名："..AuthorName)
+    -- local AuthorNamepos = R():text(".*@.*"):screen(1);
+    -- local AuthorName = GetPosStatsInfo(AuthorNamepos, "获取Tiktok作者主页名", "text", false)
+    -- PrintAndToast("作者名："..AuthorName)
     local p = {
         param={};
         header={};
@@ -15,11 +15,7 @@ function GetTiktokAuthorId()
     p.param ["action"] ='get_user_account_id';
     p.param ["username"] = AuthorName:sub(2);
     local AuthorId = AuthorName:sub(2) .. "_groupID"
-    local id = get(AuthorId,"没有获取到值");
-    if(id ~= "没有获取到值") then 
-        PrintAndToast("该id已经被存储无需再存储！")
-        return
-    end
+
     res = httpPost(p);
     if res then
          --打印服务器的返回值
@@ -87,7 +83,7 @@ function SelectCreaterNewVedio()
 
     while(video_idx<=8)
     do
-        sleep(500)
+        sleep(100)
         PrintAndToast(">>查询第"..reallyvideoidx.."号视频<<")
         local IsPinned,statustext = IsvedioPinned(video_idx)
         if(IsPinned == false) then

@@ -54,22 +54,21 @@ end
 function CheckNetIsConnect(app_name)
     local testurl = 0
     if(app_name == "Tiktok") then
-        testurl = "http:/www.tiktok.com"
+        testurl = "https:/www.tiktok.com"
     elseif(app_name=="YouTube")then 
-        testurl = "http:/www.youtube.com"
+        testurl = "https:/www.youtube.com"
     else
-        testurl = "http:/www.baidu.com"
+        testurl = "https:/www.baidu.com"
     end
     --组装http 请求参数
     local p = {
-    param={};
-    header={};
-    timeout = 3;
+        timeout = 2;
     }
     PrintAndToast("开始测试网路是否成功！")
     --1.【必填】请求的url 地址
     p.url = testurl ;
     res = httpGet(p);
+    print(res)
     if res then
         PrintAndToast(app_name.."连接成功！！！")
         PrintAndToast(res.code);
@@ -180,6 +179,8 @@ function DeleteAllVideo()
     while time<=3 do 
         local IsExistVideo,noneview = CheckPosIsExist(albumvideopos)
         if(IsExistVideo) then 
+
+
             AutoClick(albumvideopos,"进入视频区块！")
     
             --选择一个视频并长按
@@ -276,6 +277,14 @@ function DeleteSomeVideo(somevideonum)
             home()
             break
         else
+            local NewVideoNum  =  0
+            local youtubevideonum = CountPhoneVideoNum("sdcard/snaptube/download/") --youtubepath
+            local tiktokvideonum = CountPhoneVideoNum("sdcard/DCIM/Camera/") --tiktokpath
+            NewVideoNum = youtubevideonum + tiktokvideonum
+            if(NewVideoNum == 0)then 
+                PrintAndToast("完成视频删除！！")
+                return
+            end
             print("视频清除错误！重新清除！")
             ErrorFix()
             CloseAllPross()

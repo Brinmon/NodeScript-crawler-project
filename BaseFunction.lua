@@ -346,7 +346,7 @@ end
 function WriteFileData(str)
     local current_time = os.date("%Y%m%d")
     local file_name = "DownloadLog.txt"
-    local path = getDir().."/"..file_name
+    local path = "/sdcard/DataEdit/"..file_name
     local line_count = 0
     local file = io.open(path, "r+")
     if file then

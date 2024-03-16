@@ -14,15 +14,8 @@ compile("myhappymylife:1.96")
 -- DataInit(1)  程序加载进文本！
 
 local IsTest = true  --false表示测试模式，true表示正常模式
+
 PrintAndToast("开启测试模式！！")
--- local TiktokFileName = "TiktokAuthor.txt"
--- local TiktokAuthorTable = {}
--- local TiktokIsAuthorTable = {}
--- TiktokAuthorTable,TiktokIsAuthorTable = ReadTextToTable(TiktokAuthorTable,TiktokIsAuthorTable,TiktokFileName)
--- for i = 0, #TiktokAuthorTable do
--- 	print("序号"..tostring(i))
--- 	print(TiktokAuthorTable[i])	
--- end
 
 PrintAndToast("关闭测试模式！！")
 
@@ -88,8 +81,8 @@ while IsTest do
 				},
 				{type="div",ore=1,
 					views={
-						{type="text",value="账号选择：",style=css.text2},
-						{type="radio",value="*main1|main2",ore=1,id="ZhangHao"},
+						{type="text",value="类型选择：",style=css.text2},
+						{type="radio",value="*youtube|tiktok",ore=1,id="VideoType"},
 					};
 				};
 
@@ -116,29 +109,41 @@ while IsTest do
 	ret=show(ui)
 
 	if ret then 
-        if(MainWorkMod ==     "抖快全自动") then 
-
-        elseif(MainWorkMod == "快手全自动") then 
-			CrawlAndUpallvideo(1)
-        elseif(MainWorkMod == "抖音全自动") then 
-
-        elseif(MainWorkMod == "爬取视频") then
-			Crawlallvideo(CarwlMod)
-        elseif(MainWorkMod == "抖快检查视频") then 
-
-        elseif(MainWorkMod == "抖音检查视频") then
-
-        elseif(MainWorkMod == "快手检查视频") then
-
-        elseif(MainWorkMod == "上传视频") then 
-			Upallvideo(2,AuthorType)
-        elseif(MainWorkMod == "抖音上传视频") then
-            Upallvideo(1,AuthorType)
-        elseif(MainWorkMod == "快手上传视频") then
-            Upallvideo(0,AuthorType)
-        elseif(MainWorkMod == "清理垃圾视频") then
-			
-        end
+		if ModOff == "开" then
+			if(EditWorkMod ==     "添加作者") then 
+				if VideoType == "youtube" then
+					GetYouTubeAuthorId(EditContext)
+				elseif VideoType == "tiktok" then
+					GetTiktokAuthorId(EditContext)
+				end
+			elseif(EditWorkMod == "展示作者") then 
+	
+			end
+		elseif  ModOff == "关"  then
+			if(MainWorkMod ==     "抖快全自动") then 
+				CrawlAndUpallvideo(2)
+			elseif(MainWorkMod == "快手全自动") then 
+				CrawlAndUpallvideo(0)
+			elseif(MainWorkMod == "抖音全自动") then 
+				CrawlAndUpallvideo(1)
+			elseif(MainWorkMod == "爬取视频") then
+				Crawlallvideo(CarwlMod)
+			elseif(MainWorkMod == "抖快检查视频") then 
+	
+			elseif(MainWorkMod == "抖音检查视频") then
+				DouyinCheckVideo()
+			elseif(MainWorkMod == "快手检查视频") then
+				KuaishouCheckVideo()
+			elseif(MainWorkMod == "上传视频") then 
+				Upallvideo(2,AuthorType)
+			elseif(MainWorkMod == "抖音上传视频") then
+				Upallvideo(1,AuthorType)
+			elseif(MainWorkMod == "快手上传视频") then
+				Upallvideo(0,AuthorType)
+			elseif(MainWorkMod == "清理垃圾视频") then
+				
+			end
+		end
 	else
 		print('用户选择了取消')
 		print("成功退出程序！")

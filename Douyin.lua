@@ -182,3 +182,117 @@ function UpVideoInDouyinPart(idx)
 
 end
 
+
+function DouyinCheckVideoPart()
+    sleep(2000)
+    local closebuttonpos = R():desc("取消"):getParent();
+    AutoClick(closebuttonpos,"点击取消按钮！",false,false,true)
+
+    local friendclose = R():desc("关闭");
+    AutoClick(friendclose,"点击关闭按钮！",false,false,true)
+
+    --点击主页
+    local Douyin_mainPage = R():text("我"):getParent();
+    AutoClick(Douyin_mainPage,"点击主页")
+    sleep(1000)
+
+    local closebuttonpos = R():desc("取消"):getParent();
+    AutoClick(closebuttonpos,"点击取消按钮！",false,false,true)
+
+    local friendclose = R():desc("关闭");
+    AutoClick(friendclose,"点击关闭按钮！",false,false,true)
+
+    --点击更多
+    local Doyinmorepos =R():desc("更多");
+    AutoClick(Doyinmorepos,"点击更多")
+
+    --选择创作者中心
+    local Douyin_CreaterCenter = R():text("抖音创作者中心"):getParent();
+    AutoClick(Douyin_CreaterCenter,"选择创作者中心")
+
+    
+    --点击账号检测、
+    local Douyin_CheckCenter = R():text("账号检测"):getParent();
+    AutoClick(Douyin_CheckCenter,"点击账号检测、")
+
+    --点击检查按钮！
+    local Douyin_CheckButton = R():text("查看"):getParent();--R():path("/FrameLayout/WebView/WebView/View/View/View/View/View");
+    AutoClick(Douyin_CheckButton,"点击检查按钮！",false,true)
+    click(620,356)
+    sleep(3000)
+
+    while true do --
+        sleep(1000)
+        local checkvideostatus = R():text("正在检测你的抖音账号");
+        local IsExist,noneview = CheckPosIsExist(checkvideostatus)
+        print(IsExist)
+        if(IsExist) then 
+            print("正在检测视频中！")
+        else
+            print("检查完毕！")
+            local checkvideoresult = R():text("恭喜你，账号状态正常");
+            local IsExist,noneview = CheckPosIsExist(checkvideoresult)
+            if(IsExist) then 
+                print("成功检查完毕！")
+                CloseAllPross()
+                break
+            end
+
+            local checkvideoresult = R():text("视频异常结果查询"):getParent();
+            AutoClick(checkvideoresult,"存在异常视频点击进入！")
+            sleep(2000)
+            local errorvideoidx = 1
+            --获取错误视频的数量
+            local errorvideonum = 0
+            local errorvideonumpos = R():path("/FrameLayout/WebView/WebView/View/View/View"):getChild(2):getChild(1);
+            local view = find(errorvideonumpos);
+            if view then
+                errorvideonum = view.childCount
+                print("节点包含的子控件个数"..view.childCount)-- 节点包含的子控件个数 number
+            end
+
+            while errorvideoidx <= errorvideonum do 
+                local errorinfovideo = R():path("/FrameLayout/WebView/WebView/View/View/View"):getChild(2):getChild(1):getChild(errorvideoidx);
+                AutoClick(errorinfovideo,"进入错误视频信息页！")
+
+                local errorvideo = R():path("/FrameLayout/WebView/WebView/View/View"):getChild(2):getChild();
+                AutoClick(errorvideo,"进入错误视频！",false,true)
+
+                --删除视频!
+                DouyinDeleteVideo()
+                back()
+                sleep(1000)
+                back()
+                errorvideoidx = errorvideoidx + 1
+            end
+            break
+        end
+    end
+end
+
+function DouyinCheckVideo()
+    print("检查抖音是否存在问题视频！")
+    local start_time = os.time()
+    CloseConnectVpn()
+    --启动抖音！
+    runApp("com.ss.android.ugc.aweme")
+    sleep(2000)
+    while true do 
+        if pcall(DouyinCheckVideoPart) then
+            break
+        else
+            -- body3
+            print("检查视频错误！重新检查！")
+            CloseAllPross()
+            --启动抖音！
+            runApp("com.ss.android.ugc.aweme")
+            sleep(1000)
+        end
+    end
+    -- 获取程序结束时间戳
+    local end_time = os.time()
+    -- 计算运行时间（以秒为单位）
+    OutPutOperationTime(start_time,end_time)
+    print("抖音检查完毕！")
+    home()
+end

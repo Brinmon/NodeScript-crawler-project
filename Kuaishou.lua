@@ -145,7 +145,6 @@ function SelectKuaishouVideoTask(TaskType)
     end
 end
 
-
 function UpVideoInKuaishouPart(idx)
     --点击发布视频按钮
     local UpVideoButtonPos = R():id("com.smile.gifmaker:id/shoot_container"):screen(1);
@@ -165,3 +164,135 @@ function UpVideoInKuaishouPart(idx)
     sleep(500)
 end
 
+function KuaishouCheckVideo()
+    print("检查快手是否存在问题视频！")
+    CloseConnectVpn()
+    --启动快手！
+    runApp("com.smile.gifmaker")
+    while true do 
+        if pcall(KuaishouCheckVideoPart) then
+            break
+        else
+            -- body3
+            print("检查视频错误！重新检查！")
+            CloseAllPross()
+            --启动快手！
+            runApp("com.smile.gifmaker")
+        end
+    end
+    print("快手检查完毕！")
+    home()
+end
+
+function KuaishouCheckVideoPart()
+
+    -- sleep(5000)
+    --判断是否进入快手页面
+    local IsWatchKuaishouTextPos = R():text("首页");
+    AutoClick(IsWatchKuaishouTextPos,"点击首页",false,true)
+
+    local mainpage_more = {26,66,75,107,"39,75,#232323|63,75,#232323|53,87,#222222|41,99,#262626|63,100,#222222",95}
+    AutoColorClick(mainpage_more,"点击主页的更多选项")
+
+    --选择创作者中心
+    local Kuaishou_CreaterCenter = R():text("创作者中心");
+    AutoClick(Kuaishou_CreaterCenter,"选择创作者中心",false,true)
+
+    local morefuwu = R():text("全部服务"):getParent();
+    AutoClick(morefuwu,"选择创作者中心",false,true)
+
+    --点击账号检测
+    local Kuaishou_CheckButton = R():text("账号检测"):getParent();
+    AutoClick(Kuaishou_CheckButton,"点击账号检测",false,true)
+
+    --点击检查按钮！
+    local Kuaishou_CheckButton = R():path("/FrameLayout/WebView/WebView/View/View/Button");
+    AutoClick(Kuaishou_CheckButton,"点击检查按钮！")
+    sleep(3000)
+
+    while true do
+        local checkvideostatus = R():text("正在诊断中");
+        local checkvideostatusIsExist,noneview = CheckPosIsExist(checkvideostatus)
+        if(checkvideostatusIsExist) then 
+            print("正在检测视频中！")
+            sleep(1000)
+        else
+            print("检查完毕！")
+            sleep(4000)
+            local checkvideoresult = R():text("账号近期各项正常，请继续保持");
+            local checkvideoresultIsExist,noneview = CheckPosIsExist(checkvideoresult)
+
+            local checkvideoresult1 = R():text("账号部分功能被限制");
+            local checkvideoresultIsExist1,noneview1 = CheckPosIsExist(checkvideoresult1)
+            print(checkvideoresultIsExist)
+            print(checkvideoresultIsExist1)
+            if(checkvideoresultIsExist or checkvideoresultIsExist1) then 
+                print("成功检查完毕！")
+                CloseAllPross()
+                return
+            end
+            print("123456")
+            local checkvideoresult = R():text("查看作品诊断结果"):getParent();
+            AutoClick(checkvideoresult,"存在异常视频点击进入！")
+            sleep(3000)
+            local errorvideoidx = 1
+            local errorvideonum = 0
+            local errorvideonumpos = R():text("作品标题");
+            local views = finds(errorvideonumpos);
+            for k,view in pairs(views) do
+                errorvideonum = k
+            end
+			print("节点包含的子控件个数"..errorvideonum)-- 节点包含的子控件个数 number
+
+            while errorvideoidx <= errorvideonum do 
+                local errorinfovideo = R():path("/FrameLayout/WebView/WebView/View/View/View"):getChild(2):getChild(1):getChild(errorvideoidx+2):getChild(1):getChild(1);
+                AutoClick(errorinfovideo,"进入错误视频信息页！",false,true)
+                sleep(1000)
+                print('1')
+                local errorvideo = R():path("/FrameLayout/WebView/WebView/View/View/View/View");
+                AutoClick(errorvideo,"进入错误视频！",false,true)
+                print('1')
+                --删除视频!
+                KuaishouDeleteVideo()
+                back()
+                sleep(1000)
+                back()
+                errorvideoidx = errorvideoidx + 1
+            end
+            print("删除所有的错误视频")
+            CloseAllPross()
+            break;
+        end
+    end
+end
+
+
+function KuaishouDeleteVideo()
+    local settingsbutton = R():id("com.smile.gifmaker:id/forward_button");
+    AutoClick(settingsbutton,"点击分享按钮！",false,true)
+
+    local morefunctionsilde = R():path("/FrameLayout/FrameLayout/FrameLayout/RecyclerView"):getChild(3):getChild();
+    local flag,view =    CheckPosIsExist(morefunctionsilde)
+    if(flag) then 
+        AutoSild(morefunctionsilde,"滑动功能条！")
+        AutoSild(morefunctionsilde,"滑动功能条！")
+        AutoSild(morefunctionsilde,"滑动功能条！")
+    end
+    sleep(1000)
+    slid(650,1495,91,1495,500);
+    sleep(500)
+    slid(650,1495,91,1495,500);
+    
+    local deletebutton = R():text("删除作品"):getParent();
+    AutoClick(deletebutton,"点击删除按钮！",false,true)
+    sleep(500)
+    local againdeletebutton = R():text("确认删除"):getParent();
+    local IsExist,noneview = CheckPosIsExist(againdeletebutton)
+    if(IsExist) then 
+        AutoClick(againdeletebutton,"确定点击删除按钮！",false,true)
+    else
+        local againdeletebutton = R():text("残忍删除"):getParent();
+        AutoClick(againdeletebutton,"确定点击删除按钮！",false,true)
+    end
+
+end
