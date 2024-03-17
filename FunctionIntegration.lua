@@ -86,7 +86,7 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 					-- 	end
 					-- end
 
-					if checkidx == 1 then
+					if checkidx == 3 then
 						if CrawlAndUPMod == 0 then
 							KuaishouCheckVideo()
 						elseif CrawlAndUPMod == 1 then
@@ -202,6 +202,82 @@ function ClearVideo()
     end
 end
 
+function testInternetAvailability(hour, minute, day)
+    -- 检查校园网状态
+    local hasInternet = true -- 默认有校园网
+
+    -- 判断是否没有校园网
+    if (day >= 2 and day <= 6 and hour >= 0 and hour < 6) or
+       (day >= 2 and day <= 5 and hour == 23 and minute >= 40) or
+       (day == 1 and hour == 23 and minute >= 40) then
+        hasInternet = false
+    end
+
+	day = day - 1 == 0 and 7 or day -1
+    -- 输出校园网状态
+    if hasInternet then
+		
+        print(string.format("在星期%d的 %02d:%02d 有校园网", day, hour, minute))
+    else
+        print(string.format("在星期%d的 %02d:%02d 没有校园网", day, hour, minute))
+    end
+	return hasInternet
+end
+
 function ErrorFix()
 	PrintAndToast("欢迎来到Errorfix函数")
+	local current_time = os.date("*t")
+	local hour = current_time.hour
+	local minute = current_time.min
+	local day = current_time.wday
+	local checkhasnet = testInternetAvailability(hour, minute, day)
+	if(checkhasnet == false) then 
+		CloseConnectVpn()
+		while true do 
+			local current_time = os.date("*t")
+			local hour = current_time.hour
+			local minute = current_time.min
+			local day = current_time.wday
+			local checkhasnet = testInternetAvailability(hour, minute, day)
+			if(checkhasnet) then 
+				noti();
+				sleep(500)
+				local wifipos = R():path("/FrameLayout/FrameLayout/ViewGroup"):getChild();
+				AutoClick(wifipos,"打开wifi设置！",true)
+	
+				sleep(2000)
+				local husestudentwifi = R():text("HUSE-Student"):getParent();
+				AutoClick(husestudentwifi,"点击校园网并且连接！HUSE-Student",false,false,true)
+		
+				local connectpos = R():text("连接");
+				AutoClick(connectpos,"点击连接按钮",false,false,true)
+				sleep(10000)
+
+				--组装http 请求参数
+				p={};
+				--1.【必填】请求的url 地址
+				p.url ="http:/www.baidu.com";
+				res = httpGet(p);
+				if res then
+					print("wifi连接成功！！！")
+					print(res.code);
+					return
+				end
+				print("wifi连接失败！！！")
+				
+				back()
+				sleep(500)
+				local wifiswitchpos = R():id("com.android.settings:id/switch_widget");
+				AutoClick(wifiswitchpos,"点击wifi开关!",false,false,true)
+		
+				sleep(1000)
+				AutoClick(wifiswitchpos,"点击wifi开关!",false,false,true)
+			else
+				print("继续等待.........")
+				sleep(3000)
+			end
+		end
+	else
+		PrintAndToast("有校园网！！！")
+	end
 end

@@ -288,3 +288,49 @@ function DeleteSomeVideo(somevideonum)
         end
     end
 end
+
+
+function OpenWifi()
+    CloseConnectVpn()
+    while true do 
+        local current_time = os.date("*t")
+        local hour = current_time.hour
+        local min = current_time.min
+        if(hour >= 6 and hour <=23) then 
+            noti();
+            sleep(500)
+            local wifipos = R():path("/FrameLayout/FrameLayout/ViewGroup"):getChild();
+            AutoClick(wifipos,"打开wifi设置！",true)
+
+            sleep(2000)
+            local husestudentwifi = R():text("HUSE-Student"):getParent();
+            AutoClick(husestudentwifi,"点击校园网并且连接！HUSE-Student",false,false,true)
+    
+            local connectpos = R():text("连接");
+            AutoClick(connectpos,"点击连接按钮",false,false,true)
+            sleep(10000)
+            --组装http 请求参数
+            p={};
+            --1.【必填】请求的url 地址
+            p.url ="http:/www.baidu.com";
+            res = httpGet(p);
+            if res then
+                print("wifi连接成功！！！")
+                print(res.code);
+                return
+            end
+            print("wifi连接失败！！！")
+    		
+    		back()
+    		sleep(500)
+            local wifiswitchpos = R():id("com.android.settings:id/switch_widget");
+            AutoClick(wifiswitchpos,"点击wifi开关!",false,false,true)
+    
+            sleep(1000)
+            AutoClick(wifiswitchpos,"点击wifi开关!",false,false,true)
+        else
+            print("继续等待.........")
+            sleep(3000)
+        end
+    end
+end
