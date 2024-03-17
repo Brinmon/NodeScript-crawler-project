@@ -277,11 +277,8 @@ function DeleteSomeVideo(somevideonum)
             home()
             break
         else
-            local NewVideoNum  =  0
-            local youtubevideonum = CountPhoneVideoNum("sdcard/snaptube/download/") --youtubepath
-            local tiktokvideonum = CountPhoneVideoNum("sdcard/DCIM/Camera/") --tiktokpath
-            NewVideoNum = youtubevideonum + tiktokvideonum
-            if(NewVideoNum == 0)then 
+            local NewVideoNum  =  GetCurrentVideoNum()
+            if(tonumber(NewVideoNum) == 0)then 
                 PrintAndToast("完成视频删除！！")
                 return
             end
