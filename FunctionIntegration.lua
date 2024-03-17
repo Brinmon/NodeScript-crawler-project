@@ -86,7 +86,7 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 					-- 	end
 					-- end
 
-					if checkidx == 5 then
+					if checkidx == 1 then
 						if CrawlAndUPMod == 0 then
 							KuaishouCheckVideo()
 						elseif CrawlAndUPMod == 1 then
@@ -172,8 +172,34 @@ function Upallvideo(UpMod,videotype)
 			return 0
 		else
 			PrintAndToast("Upallvideo上传视频失败！！"..errorinfo)
+			ErrorFix()
+            CloseAllPross()
 		end
 	end
+end
+
+
+function ClearVideo()
+    local info =  getPageInfo();
+    if info.name == "抖音" then 
+        PrintAndToast("应用:"..info.name);-- 当前应用名称
+        while true do 
+            DouyinDeleteVideo()
+            sleep(500)
+            -- local profile_view_pager = R():path("/FrameLayout/RecyclerView");--R():id("com.ss.android.ugc.aweme:id/g0+");
+            -- AutoSild(profile_view_pager,"滑动视频view界面")
+        end
+    elseif(info.name == "快手") then
+        PrintAndToast("应用:"..info.name);-- 当前应用名称
+        while true do 
+            KuaishouDeleteVideo()
+            sleep(1000)
+            click(239/2,(996+678)/2)
+            sleep(1000)
+            -- local profile_view_pager = R():id("com.smile.gifmaker:id/profile_view_pager"):getChild();
+            -- AutoSild(profile_view_pager,"滑动视频view界面")
+        end
+    end
 end
 
 function ErrorFix()

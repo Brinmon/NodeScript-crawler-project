@@ -33,7 +33,6 @@ function UpVideoInKuaishou(UpVideoNum,videotype)
     local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
     PrintAndToast("成功进入快手！")
 
-    
     local idx = 1
 
     while true do 
@@ -195,9 +194,9 @@ function KuaishouCheckVideoPart()
     AutoColorClick(mainpage_more,"点击主页的更多选项")
 
     --选择创作者中心
-    local Kuaishou_CreaterCenter = R():text("创作者中心");
+    local Kuaishou_CreaterCenter = R():text("创作者中心"):screen(1);
     AutoClick(Kuaishou_CreaterCenter,"选择创作者中心",false,true)
-
+    -- AutoClick(Kuaishou_CreaterCenter,"选择创作者中心",false,true,true)
     local morefuwu = R():text("全部服务"):getParent();
     AutoClick(morefuwu,"选择创作者中心",false,true)
 
@@ -227,11 +226,11 @@ function KuaishouCheckVideoPart()
             print(checkvideoresultIsExist)
             print(checkvideoresultIsExist1)
             if(checkvideoresultIsExist or checkvideoresultIsExist1) then 
-                print("成功检查完毕！")
+                print("成功检查完毕！不存在问题视频！")
                 CloseAllPross()
                 return
             end
-            print("123456")
+            print("账号存在问题！！")
             local checkvideoresult = R():text("查看作品诊断结果"):getParent();
             AutoClick(checkvideoresult,"存在异常视频点击进入！")
             sleep(3000)

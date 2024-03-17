@@ -296,3 +296,19 @@ function DouyinCheckVideo()
     print("抖音检查完毕！")
     home()
 end
+
+function DouyinDeleteVideo()
+    local morebutton = R():desc("更多，按钮");
+    AutoClick(morebutton,"点击更多按钮！")
+
+    local morefunctionsilde = R():path("/FrameLayout/FrameLayout/RecyclerView");
+    AutoSild(morefunctionsilde,"滑动功能条！")
+    AutoSild(morefunctionsilde,"滑动功能条！")
+    AutoSild(morefunctionsilde,"滑动功能条！")
+
+    local deletebutton = R():text("删除"):getParent();
+    AutoClick(deletebutton,"点击删除按钮！")
+
+    local againdeletebutton = R():text("确认删除");
+    AutoClick(againdeletebutton,"确定点击删除按钮！")
+end

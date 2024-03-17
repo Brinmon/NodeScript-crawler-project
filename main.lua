@@ -116,8 +116,8 @@ while IsTest do
 				elseif VideoType == "tiktok" then
 					GetTiktokAuthorId(EditContext)
 				end
-			elseif(EditWorkMod == "展示作者") then 
-	
+			elseif(EditWorkMod == "修改标题") then 
+				PrintAndToast("后续实现")
 			end
 		elseif  ModOff == "关"  then
 			if(MainWorkMod ==     "抖快全自动") then 
@@ -129,7 +129,8 @@ while IsTest do
 			elseif(MainWorkMod == "爬取视频") then
 				Crawlallvideo(CarwlMod)
 			elseif(MainWorkMod == "抖快检查视频") then 
-	
+				KuaishouCheckVideo()
+				DouyinCheckVideo()
 			elseif(MainWorkMod == "抖音检查视频") then
 				DouyinCheckVideo()
 			elseif(MainWorkMod == "快手检查视频") then
@@ -141,7 +142,7 @@ while IsTest do
 			elseif(MainWorkMod == "快手上传视频") then
 				Upallvideo(0,AuthorType)
 			elseif(MainWorkMod == "清理垃圾视频") then
-				
+				ClearVideo()
 			end
 		end
 	else
