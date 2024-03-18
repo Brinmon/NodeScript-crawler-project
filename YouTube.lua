@@ -366,26 +366,17 @@ function GetOneYouTubeCreaterNewVideo(YouTubeAuthorName,videotype)
     sleep(1000)
     
     if videotype == "Shorts" then
-        local IsZan = CheckColorIsSucceed(VideoIsWhiteZanColor,"检查该视频是否被点赞标记！",2)
-        if(IsZan) then
+        local shortsvideotitle = R():id("app.revanced.android.youtube:id/reel_main_title");
+        local CurrentVideoTitle = GetPosStatsInfo(shortsvideotitle,"获取Youtube视频的标题！","text")
+        local AuthorId = YouTubeAuthorName.."_YouTubeShortsTitle"
+        local AuthorTitle = get(AuthorId,"没有获取到值");
+        if(CurrentVideoTitle ~= AuthorTitle) then 
             sleep(1000)
             PrintAndToast("该视频未被标记存在最新视频！")
             PrintAndToast(YouTubeAuthorName.."--->存在最新视频！")
             PrintAndToast("开始下载视频！")
             DownloadVedioInYouTube("Shorts")
-            
-            sleep(500)
-            back()
-            AutoColorClick(VideoIsWhiteZanColor,"视频下载完毕，点赞标记一下！")
-            sleep(500)
-            
-            local IsRedZan = CheckColorPosIsExist(VideoIsRedZanColor)
-            if(IsRedZan) then 
-                sleep(1000)
-                PrintAndToast("标记成功！")
-            else
-                PrintAndToast("标记失败！")
-            end
+            save(AuthorId,AuthorTitle)
             local info = {
                 data = "Youtube",
                 name = YouTubeAuthorName

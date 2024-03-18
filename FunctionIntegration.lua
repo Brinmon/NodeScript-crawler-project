@@ -57,18 +57,20 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 		local Iserror,errorinfo = pcall(
 			function()
 				while true do 
-					for i = 0, #TiktokAuthorTable do
-						print("序号:"..tostring(i))
-						GetTiktokTableCreaterNewVideo(TiktokFileName,TiktokAuthorTable[i],TiktokIsAuthorTable[i])
-						sleep(1000)
-						local v1 = Upallvideo(UpMod,videotype)
-						if(v1 == 0)then
-							ConnectVpn()
-						end
-						
-					end
+
+					-- for i = 0, #TiktokAuthorTable do
+					-- 	print("序号:"..tostring(i))
+					-- 	TiktokAuthorTable[i],TiktokIsAuthorTable[i] = shuffle(TiktokAuthorTable[i],TiktokIsAuthorTable[i])
+					-- 	GetTiktokTableCreaterNewVideo(TiktokFileName,TiktokAuthorTable[i],TiktokIsAuthorTable[i])
+					-- 	sleep(1000)
+					-- 	local v1 = Upallvideo(UpMod,videotype)
+					-- 	if(v1 == 0)then
+					-- 		ConnectVpn()
+					-- 	end
+					-- end
 
 					for i = 0, #YouTubeAuthorTable do
+						YouTubeAuthorTable[i],YouTubeIsAuthorTable[i] = shuffle(YouTubeAuthorTable[i],YouTubeIsAuthorTable[i])
 						GetYouTubeTableCreaterNewVideo(YouTubeFileName,YouTubeAuthorTable[i],YouTubeIsAuthorTable[i],YouTubeVideoType)
 						sleep(1000)
 						local v1 = Upallvideo(UpMod,videotype)
@@ -222,6 +224,17 @@ function testInternetAvailability(hour, minute, day)
         print(string.format("在星期%d的 %02d:%02d 没有校园网", day, hour, minute))
     end
 	return hasInternet
+end
+
+-- 定义Fisher-Yates洗牌算法
+function shuffle(arr,arr1)
+    local n = #arr
+    for i = n, 2, -1 do
+        local j = math.random(i)
+        arr[i], arr[j] = arr[j], arr[i]
+		arr1[i],arr1[j] = arr1[j],arr1[i]
+    end
+	return arr,arr1
 end
 
 function ErrorFix()
