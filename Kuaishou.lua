@@ -303,32 +303,62 @@ function KuaishouDeleteVideo()
 end
 
 function SwapAccount()
-
+    local start_time = os.time()
     runApp("com.smile.gifmaker")
     sleep(5000)
     --判断是否进入快手页面
-    local IsWatchKuaishouTextPos = R():text("首页");
-    local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
-    PrintAndToast("成功进入快手！")
 
     local idx = 1
-
     while true do 
         local Iserror,errorinfo = pcall(
             function()
+                local IsWatchKuaishouTextPos = R():text("我");
+                AutoClick(IsWatchKuaishouTextPos,"等待成功进入快手",false,true)
+                PrintAndToast("成功进入快手！")
 
+                local getpageusername = R():id("com.smile.gifmaker:id/user_name_tv"):screen(1);
+                local UserName = GetPosStatsInfo(getpageusername,"获取用户名","text")
+                PrintAndToast("获取到的名字：")
+                PrintAndToast(UserName)
+
+                local mainpagemorbutton = R():id("com.smile.gifmaker:id/more_btn"):desc("更多");
+                AutoClick(mainpagemorbutton,"点击更多按钮！",false,true)
+
+                local settingbutton = R():text("设置");
+                AutoClick(settingbutton,"点击设置按钮！",false,true)
+
+                local sildpage = R():id("com.smile.gifmaker:id/item_list");
+                AutoSild(sildpage,"滑行到最下面！")
+
+                local swapaccointpos = R():id("com.smile.gifmaker:id/button"):text("切换账号");
+                AutoClick(swapaccointpos,"点击切换账号按钮！")
+
+                if(UserName == "布可BuKer") then
+                    click(498,644)
+                elseif(UserName == "盐水怪") then
+                    click(221,644)
+                end
+                sleep(4000)
+                local UserName1 = GetPosStatsInfo(getpageusername,"验证name！！","text")
+                PrintAndToast("获取到的名字："..UserName1)
+                if(UserName1 == UserName)then
+                    error("账号切换失败")
+                end
+                -- R():text("布可BuKer");click(221,644)
+                -- R():text("盐水怪");click(498,644)
             end
         )
         if Iserror then
             home()
+            PrintAndToast("账号切换成功!")
             -- 获取程序结束时间戳
             local end_time = os.time()
             -- 计算运行时间（以秒为单位）
             OutPutOperationTime(start_time,end_time)
             break
         else
-            print("UpVideoInKuaishou视频上传失败！重新上传！")
-            ErrorFix()
+            print("SwapAccount失败！重新上传！")
+            -- ErrorFix()
             CloseAllPross()
             runApp("com.smile.gifmaker")
         end

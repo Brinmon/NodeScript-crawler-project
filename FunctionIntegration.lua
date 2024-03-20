@@ -88,7 +88,7 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 					-- 	end
 					-- end
 
-					if checkidx == 3 then
+					if checkidx == 1 then
 						if CrawlAndUPMod == 0 then
 							KuaishouCheckVideo()
 						elseif CrawlAndUPMod == 1 then
@@ -97,6 +97,7 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 							KuaishouCheckVideo()
 							DouyinCheckVideo()
 						end
+						SwapAccount()--切换账号
 						ConnectVpn()
 						checkidx = 0
 					end
