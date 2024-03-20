@@ -58,16 +58,16 @@ function CrawlAndUpallvideo(CrawlAndUPMod)
 			function()
 				while true do 
 
-					-- for i = 0, #TiktokAuthorTable do
-					-- 	print("序号:"..tostring(i))
-					-- 	TiktokAuthorTable[i],TiktokIsAuthorTable[i] = shuffle(TiktokAuthorTable[i],TiktokIsAuthorTable[i])
-					-- 	GetTiktokTableCreaterNewVideo(TiktokFileName,TiktokAuthorTable[i],TiktokIsAuthorTable[i])
-					-- 	sleep(1000)
-					-- 	local v1 = Upallvideo(UpMod,videotype)
-					-- 	if(v1 == 0)then
-					-- 		ConnectVpn()
-					-- 	end
-					-- end
+					for i = 0, #TiktokAuthorTable do
+						print("序号:"..tostring(i))
+						TiktokAuthorTable[i],TiktokIsAuthorTable[i] = shuffle(TiktokAuthorTable[i],TiktokIsAuthorTable[i])
+						GetTiktokTableCreaterNewVideo(TiktokFileName,TiktokAuthorTable[i],TiktokIsAuthorTable[i])
+						sleep(1000)
+						local v1 = Upallvideo(UpMod,videotype)
+						if(v1 == 0)then
+							ConnectVpn()
+						end
+					end
 
 					for i = 0, #YouTubeAuthorTable do
 						YouTubeAuthorTable[i],YouTubeIsAuthorTable[i] = shuffle(YouTubeAuthorTable[i],YouTubeIsAuthorTable[i])

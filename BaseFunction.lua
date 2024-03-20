@@ -31,6 +31,112 @@ function CheckColorPosIsExist(rule)
     end
 end
 
+--d.查找文字是否存在
+function CheckOcrWordIsExist(rule)
+    local res = ocrp(rule);
+    if res then
+        for k,v in pairs(res) do
+            return true,v
+            
+        end;
+    end
+    return false,res
+end
+
+--text_box_position[1][1] lefttop_x
+--text_box_position[1][2] lefttop_y
+--text_box_position[2][1] righttop_x
+--text_box_position[2][2] righttop_y
+--text_box_position[3][1] rightbottom_x
+--text_box_position[3][2] rightbottom_y
+--text_box_position[4][1] leftbottom_x
+--text_box_position[4][2] leftbottom_y
+function TableToPosData(text_box_position)
+    data1 = {
+        lefttop_x     = text_box_position[1][1],
+        lefttop_y     = text_box_position[1][2],
+        righttop_x    = text_box_position[2][1],
+        righttop_y    = text_box_position[2][2],
+        rightbottom_x = text_box_position[3][1],
+        rightbottom_y = text_box_position[3][2],
+        leftbottom_x  = text_box_position[4][1],
+        leftbottom_y  = text_box_position[4][2]
+    }
+    return data1
+end
+
+function AutoOcrWordClick(rule,str,targettext,islongflag,iswait,waittime)
+    local OrcWordIsExist
+    local targetview
+    local time = 1
+    local islongclick = 0
+
+    if longflag then 
+        islongclick = 1
+    end
+
+    while(true)
+    do
+        OcrWordIsExist,targetview = CheckOcrWordIsExist(rule)
+        if(OcrWordIsExist) then 
+            PrintAndToast(str.." 节点：存在！！！")
+            local PosData = TableToPosData(targetview.text_box_position)
+            print(PosData)
+            if(targetview.text == targettext)then
+                PrintAndToast(targettext.." ：目标文字单独存在直接点击")
+                if(islongclick == 1) then
+                    PrintAndToast("长按坐标！")
+                    click((PosData.lefttop_x + PosData.rightbottom_x)/2 , (PosData.lefttop_y + PosData.leftbottom_y)/2,1000)
+                    return 
+                end
+                click((PosData.lefttop_x + PosData.rightbottom_x)/2 , (PosData.lefttop_y + PosData.leftbottom_y)/2)
+                return 
+            end
+            text,msgs =  ocrx("font.t",PosData.lefttop_x,PosData.lefttop_y,PosData.rightbottom_x,PosData.leftbottom_y)
+            -- print(PosData.lefttop_x)
+            -- print(PosData.lefttop_y)
+            -- print(PosData.rightbottom_x)
+            -- print(PosData.leftbottom_y)
+            if text then
+                print(text); -- 识别到的文字，会自动换行
+                for k,v in pairs(msgs) do
+                    PrintAndToast(targettext.."：识别到文字开始匹配")
+                    if(string.find(targettext, v.text))then
+                        if(islongclick == 1) then
+                            PrintAndToast("长按坐标！")
+                            click(v.x,v.y,1000)
+                            return 
+                        end
+                        click(v.x,v.y)
+                        return 
+                    end
+                    -- print(v.text); --文字
+                    -- print(v.x); --x坐标 （相对于屏幕）
+                    -- print(v.y); --y坐标 （相对于屏幕）
+                    -- print(v.sim);  -- 相似度（0-1） 1=100%匹配
+                    -- print(v.width); -- 宽度 （字符的宽度）
+                    -- print(v.height); -- 高度（字符的高度）
+                end
+            end
+        end
+    
+        if(iswait and time == waittime) then 
+            PrintAndToast("无需等待直接跳过！")
+            return "跳过"
+        end
+        
+        if(time == globaltime) then
+            PrintAndToast("OcrWordClick点击失败重新运行！")
+            PrintAndToast(str.." 不存在！")
+            error("按钮不存在！",0) 
+        else
+            sleep(1000)
+            PrintAndToast("OcrWordClick控件点击循环:".. time)
+            time = time+1
+        end
+    end
+end
+
 --智能点击按钮
 --rule:路径规则  str：调试信息 longflag：是否长按 posflag：是否使用坐标点击
 --坐标点击时要确保目标上层无遮挡

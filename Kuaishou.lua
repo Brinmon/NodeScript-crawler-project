@@ -85,8 +85,6 @@ function WaitForKuaishouUpVideoFinishedInKuaishou()
     local whiletime = 1
     while whiletime<=10 do 
         print("检测次数："..whiletime)
-        local Xbutton = R():text("取消");
-        AutoClick(Xbutton,"点击取消！",false,true,true)
         if (CheckFunctionIsSucceed(KuaishouIsVoideFinished,"检测是否发布完成",true,3)) then
             --AutoClick(KuaishouIsVoideFinished,"进入新发布的视频！")
             print("视频发布成功！")
@@ -97,6 +95,8 @@ function WaitForKuaishouUpVideoFinishedInKuaishou()
             print("WaitForKuaishouUpVideoFinished，继续等待！")
         end
         sleep(1000)
+        local Xbutton = R():text("取消");
+        AutoClick(Xbutton,"点击取消！",false,true,true)
         whiletime = whiletime + 1
     end
     print("无需等待，直接跳过！")
@@ -125,6 +125,10 @@ function SelectKuaishouVideoTask(TaskType)
             end
             sleep(1000)
             back()
+        else
+            back()
+            sleep(500)
+            back()
         end
 
         local IsAddTaskpos = R():text("账号提示");
@@ -147,7 +151,7 @@ end
 function UpVideoInKuaishouPart(idx)
     --点击发布视频按钮
     local UpVideoButtonPos = R():id("com.smile.gifmaker:id/shoot_container"):screen(1);
-    AutoClick(UpVideoButtonPos,"点击发布按钮",false,true)
+    AutoClick(UpVideoButtonPos,"点击发布按钮")
     sleep(500)
     local albumbuttonpos = R():id("com.smile.gifmaker:id/album_layout");
     AutoClick(albumbuttonpos,"点击相册按钮",false,true)
@@ -201,8 +205,10 @@ function KuaishouCheckVideoPart()
     AutoClick(morefuwu,"选择创作者中心",false,true)
 
     --点击账号检测
-    local Kuaishou_CheckButton = R():text("账号检测"):getParent();
-    AutoClick(Kuaishou_CheckButton,"点击账号检测",false,true)
+    -- local Kuaishou_CheckButton = R():text("账号检测"):getParent();
+    -- AutoClick(Kuaishou_CheckButton,"点击账号检测",false,true)
+    local r = {match='.*账号检测.*';line=false; }
+    AutoOcrWordClick(r,"点击账号检测","账号检测")
 
     --点击检查按钮！
     local Kuaishou_CheckButton = R():path("/FrameLayout/WebView/WebView/View/View/Button");
@@ -294,4 +300,37 @@ function KuaishouDeleteVideo()
         AutoClick(againdeletebutton,"确定点击删除按钮！",false,true)
     end
 
+end
+
+function SwapAccount()
+
+    runApp("com.smile.gifmaker")
+    sleep(5000)
+    --判断是否进入快手页面
+    local IsWatchKuaishouTextPos = R():text("首页");
+    local IsWatchKuaishouText = GetPosStatsInfo(IsWatchKuaishouTextPos,"等待成功进入快手","text")
+    PrintAndToast("成功进入快手！")
+
+    local idx = 1
+
+    while true do 
+        local Iserror,errorinfo = pcall(
+            function()
+
+            end
+        )
+        if Iserror then
+            home()
+            -- 获取程序结束时间戳
+            local end_time = os.time()
+            -- 计算运行时间（以秒为单位）
+            OutPutOperationTime(start_time,end_time)
+            break
+        else
+            print("UpVideoInKuaishou视频上传失败！重新上传！")
+            ErrorFix()
+            CloseAllPross()
+            runApp("com.smile.gifmaker")
+        end
+    end
 end
